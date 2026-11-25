@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JAVED AI</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #020817;
+    color: white;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+}
+
+header {
+    padding: 22px;
+    text-align: center;
+    background: #071a32;
+    border-bottom: 1px solid #168bff;
+}
+
+header h1 {
+    color: #00baff;
+    font-size: 32px;
+    letter-spacing: 4px;
+}
+
+header p {
+    color: #8ca9c8;
+    font-size: 11px;
+    margin-top: 7px;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.logo {
+    width: 145px;
+    height: 145px;
+    margin: 35px auto;
+    border-radius: 50%;
+    background: radial-gradient(circle, #00c8ff, #0752a0, #020817);
+    box-shadow: 0 0 35px #008cff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 75px;
+    font-weight: bold;
+}
+
+.status {
+    color: #00c8ff;
+    margin: 20px;
+    font-size: 18px;
+}
+
+button {
+    background: #087bd1;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 14px 22px;
+    margin: 7px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+button:active {
+    background: #004b91;
+}
+
+.chat {
+    margin-top: 30px;
+    background: #0c1930;
+    border: 1px solid #087bd1;
+    border-radius: 15px;
+    padding: 15px;
+}
+
+input {
+    width: 100%;
+    padding: 15px;
+    background: #020817;
+    border: 1px solid #168bff;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+}
+
+#messages {
+    text-align: left;
+    margin-top: 15px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.message {
+    padding: 12px;
+    background: #102b4c;
+    border-radius: 10px;
+    margin: 10px 0;
+    overflow-wrap: anywhere;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #607b9c;
+    font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>JAVED AI</h1>
+    <p>YOUR PERSONAL AI VOICE ASSISTANT</p>
+</header>
+
+<div class="container">
+
+    <div class="logo">J</div>
+
+    <div class="status" id="status">
+        HELLO! I AM JAVED AI
+    </div>
+
+    <button onclick="startListening()">
+        🎤 START LISTENING
+    </button>
+
+    <button onclick="stopListening()">
+        STOP LISTENING
+    </button>
+
+    <div class="chat">
+
+        <input
+            type="text"
+            id="userInput"
+            placeholder="जावेद से कुछ पूछिए..."
+        >
+
+        <button onclick="sendMessage()">
+            SEND MESSAGE
+        </button>
+
+        <div id="messages"></div>
+
+    </div>
+
+</div>
+
+<footer>
+    JAVED AI 2.0 | SMART PERSONAL ASSISTANT
+</footer>
+
+<script>
+
+let recognition;
+
+function addMessage(sender, text) {
+
+    let messages = document.getElementById("messages");
+
+    let div = document.createElement("div");
+    div.className = "message";
+
+    let title = document.createElement("b");
+    title.textContent = sender + ": ";
+
+    let content = document.createElement("span");
+    content.textContent = text;
+
+    div.appendChild(title);
+    div.appendChild(content);
+
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+}
+
+function speak(text) {
+
+    if (!window.speechSynthesis) return;
+
+    window.speechSynthesis.cancel();
+
+    let voice = new SpeechSynthesisUtterance(text);
+    voice.lang = "hi-IN";
+    voice.rate = 1;
+
+    window.speechSynthesis.speak(voice);
+}
+
+function sendMessage() {
+
+    let input = document.getElementById("userInput");
+    let text = input.value.trim();
+
+    if (!text) return;
+
+    addMessage("YOU", text);
+
+    let reply = "नमस्ते! मैं जावेद AI हूँ। अभी मेरा AI सर्वर कनेक्ट नहीं है।";
+
+    if (text.toLowerCase().includes("hello") ||
+        text.toLowerCase().includes("नमस्ते")) {
+        reply = "नमस्ते! मैं जावेद AI हूँ। बताइए, मैं आपकी क्या मदद करूँ?";
+    }
+
+    else if (text.toLowerCase().includes("तुम्हारा नाम")) {
+        reply = "मेरा नाम JAVED AI है।";
+    }
+
+    else if (text.toLowerCase().includes("समय")) {
+        reply = "अभी का समय " +
+        new Date().toLocaleTimeString("hi-IN");
+    }
+
+    else if (text.toLowerCase().includes("टॉर्च")) {
+        reply = "टॉर्च कंट्रोल के लिए Android सिस्टम की अनुमति और Native Kotlin कोड चाहिए।";
+    }
+
+    else if (text.toLowerCase().includes("फोन लॉक")) {
+        reply = "फोन लॉक करने के लिए Android Device Admin Permission और Kotlin सिस्टम चाहिए।";
+    }
+
+    else if (text.toLowerCase().includes("whatsapp")) {
+        reply = "WhatsApp खोलने के लिए Android App Integration जोड़ना होगा।";
+    }
+
+    setTimeout(() => {
+        addMessage("JAVED AI", reply);
+        speak(reply);
+    }, 400);
+
+    input.value = "";
+}
+
+function startListening() {
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        alert("आपका ब्राउज़र Voice Recognition सपोर्ट नहीं करता।");
+        return;
+    }
+
+    recognition = new SpeechRecognition();
+
+    recognition.lang = "hi-IN";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = function() {
+        document.getElementById("status").innerText =
+        "JAVED IS LISTENING...";
+    };
+
+    recognition.onresult = function(event) {
+
+        let text = event.results[0][0].transcript;
+
+        document.getElementById("userInput").value = text;
+
+        sendMessage();
+    };
+
+    recognition.onerror = function() {
+        document.getElementById("status").innerText =
+        "VOICE ERROR";
+    };
+
+    recognition.onend = function() {
+        document.getElementById("status").innerText =
+        "HELLO! I AM JAVED AI";
+    };
+
+    recognition.start();
+}
+
+function stopListening() {
+
+    if (recognition) {
+        recognition.stop();
+    }
+
+    window.speechSynthesis.cancel();
+
+    document.getElementById("status").innerText =
+    "LISTENING OFF";
+}
+
+</script>
+
+</body>
+</html>
+
+3. अब GitHub में क्या करना है?
+
+1. अपने Repository में जाइए।
+2. नई फाइल बनाइए।
+3. नाम लिखिए "index.html"।
+4. पूरा कोड पेस्ट कीजिए।
+5. Commit changes दबाइए।
+
+4. इसके बाद क्या होगा?
+
+यह शुरुआती HTML स्क्रीन होगी। इसमें चैट इंटरफेस, आवाज पहचानने और जवाब बोलने की बेसिक सुविधा होगी।
+
+ध्यान दें: अभी असली ChatGPT जैसा AI और फोन का टॉर्च, लॉक, WhatsApp आदि कंट्रोल नहीं जुड़ा है। उनके लिए Kotlin और सुरक्षित AI Backend जोड़ेंगे।
+
+हमारा अंतिम लक्ष्य JAVED AI को एक असली Android APK बनाना है।
