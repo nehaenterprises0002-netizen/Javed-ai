@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JAVED AI</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #020817;
+    color: white;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    padding: 25px 0;
+}
+
+h1 {
+    color: #00aaff;
+    font-size: 32px;
+}
+
+header p {
+    color: #9bbbd5;
+    margin-top: 8px;
+}
+
+.logo {
+    width: 120px;
+    height: 120px;
+    border: 3px solid #00aaff;
+    border-radius: 50%;
+    margin: 35px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 65px;
+    color: #00aaff;
+    box-shadow: 0 0 25px #007bff;
+}
+
+#status {
+    text-align: center;
+    color: #00aaff;
+    margin: 20px;
+}
+
+.controls {
+    text-align: center;
+}
+
+button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    border-radius: 10px;
+    margin: 7px;
+    font-size: 16px;
+}
+
+input {
+    width: 100%;
+    padding: 15px;
+    margin-top: 25px;
+    border-radius: 10px;
+    border: 1px solid #008cff;
+    background: #101c30;
+    color: white;
+    font-size: 16px;
+}
+
+#chat {
+    margin-top: 25px;
+}
+
+.message {
+    background: #101c30;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 10px;
+    line-height: 1.5;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>JAVED AI</h1>
+    <p>Your Personal AI Assistant</p>
+</header>
+
+<div class="logo">J</div>
+
+<p id="status">JAVED AI READY</p>
+
+<div class="controls">
+    <button onclick="startListening()">🎤 Start Listening</button>
+    <button onclick="stopListening()">⏹ Stop Listening</button>
+</div>
+
+<input
+    id="userInput"
+    type="text"
+    placeholder="Ask Javed anything..."
+>
+
+<div class="controls">
+    <button onclick="sendMessage()">Send Message</button>
+</div>
+
+<div id="chat"></div>
+
+<script>
+
+function addMessage(sender, text) {
+    const div = document.createElement("div");
+    div.className = "message";
+    div.textContent = sender + ": " + text;
+
+    document.getElementById("chat").appendChild(div);
+}
+
+function speak(text) {
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = "hi-IN";
+    speech.rate = 1;
+
+    speechSynthesis.speak(speech);
+}
+
+function sendMessage() {
+
+    const input = document.getElementById("userInput");
+    const original = input.value.trim();
+    const msg = original.toLowerCase();
+
+    if (!msg) return;
+
+    addMessage("You", original);
+
+    let reply = "मैं JAVED AI हूँ। बताइए, आपकी क्या मदद करूँ?";
+
+    if (msg.includes("hello") || msg.includes("नमस्ते")) {
+        reply = "Hello! Welcome to JAVED AI.";
+    }
+
+    else if (msg.includes("your name") || msg.includes("नाम")) {
+        reply = "मेरा नाम JAVED AI है।";
+    }
+
+    else if (msg.includes("time") || msg.includes("समय")) {
+        reply = "अभी समय है " + new Date().toLocaleTimeString();
+    }
+
+    else if (msg.includes("flashlight") || msg.includes("torch")) {
+        reply = "Flashlight command detected.";
+    }
+
+    else if (msg.includes("whatsapp")) {
+        reply = "WhatsApp command detected.";
+    }
+
+    addMessage("JAVED AI", reply);
+
+    speak(reply);
+
+    input.value = "";
+}
+
+let recognition;
+
+function startListening() {
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        alert("Voice recognition is not supported.");
+        return;
+    }
+
+    recognition = new SpeechRecognition();
+
+    recognition.lang = "hi-IN";
+    recognition.continuous = false;
+
+    recognition.onstart = function() {
+        document.getElementById("status").innerText = "LISTENING...";
+    };
+
+    recognition.onresult = function(event) {
+
+        document.getElementById("userInput").value =
+            event.results[0][0].transcript;
+
+        sendMessage();
+    };
+
+    recognition.onend = function() {
+        document.getElementById("status").innerText = "JAVED AI READY";
+    };
+
+    recognition.start();
+}
+
+function stopListening() {
+
+    if (recognition) {
+        recognition.stop();
+    }
+}
+
+</script>
+
+</body>
+</html>
